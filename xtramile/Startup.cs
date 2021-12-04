@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Infrastructure.Model;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace xtramile
 {
@@ -12,6 +14,7 @@ namespace xtramile
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -19,8 +22,17 @@ namespace xtramile
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(builder => builder.AddSerilog(dispose: true));
 
-            services.AddControllersWithViews();
+            services.AddHttpClient();
+
+            services.Configure<WeatherConfig>(Configuration.GetSection("WeatherApi"));
+            services.AddSingleton<IUtilsServices, UtilsServices>();
+            services.AddSingleton<IHttpClientServices, HttpClientServices>();
+            services.AddTransient<IWeatherServices, WeatherServices>();
+
+            services.AddControllers();
+            services.AddSwaggerGen();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -41,10 +53,17 @@ namespace xtramile
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {
@@ -59,7 +78,7 @@ namespace xtramile
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }
