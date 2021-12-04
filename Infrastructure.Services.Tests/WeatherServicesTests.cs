@@ -22,30 +22,6 @@ namespace Infrastructure.Services.Tests
         }
 
         [Fact]
-        public void GetCountriesTest()
-        {
-            ICollection<Country> countries = WeatherServices.GetCountries().GetAwaiter().GetResult();
-            Assert.NotEmpty(countries);
-            Assert.True(countries.Any(country => country.name == "Indonesia"));
-        }
-
-        [Fact]
-        public void GetCities_NegativeTest()
-        {
-            Assert.Throws<ArgumentNullException>(() => WeatherServices.GetCities(null).GetAwaiter().GetResult());
-            Assert.Throws<ArgumentNullException>(() => WeatherServices.GetCities(string.Empty).GetAwaiter().GetResult());
-            Assert.Throws<ArgumentNullException>(() => WeatherServices.GetCities(" ").GetAwaiter().GetResult());
-        }
-
-        [Fact]
-        public void GetCitiesTest()
-        {
-            ICollection<string> cities = WeatherServices.GetCities("Indonesia").GetAwaiter().GetResult();
-            Assert.NotEmpty(cities);
-            Assert.Contains("Bandung", cities);
-        }
-
-        [Fact]
         public void GetWeatherInfo_NegativeTest()
         {
             Assert.Throws<ArgumentNullException>(() => WeatherServices.GetWeatherInfo(null).GetAwaiter().GetResult());

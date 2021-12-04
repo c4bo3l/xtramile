@@ -25,6 +25,19 @@ namespace Infrastructure.Services.Tests
             }
         }
 
+        private ILocationServices _LocationServices;
+        protected ILocationServices LocationServices
+        {
+            get
+            {
+                if (_LocationServices == null)
+                {
+                    _LocationServices = ServiceProvider.GetRequiredService<ILocationServices>(); ;
+                }
+                return _LocationServices;
+            }
+        }
+
         private IHttpClientServices _HttpClientServices;
         protected IHttpClientServices HttpClientServices
         {
@@ -52,6 +65,7 @@ namespace Infrastructure.Services.Tests
             Services.AddSingleton<IHttpClientServices, HttpClientServices>();
             Services.AddSingleton<IUtilsServices, UtilsServices>();
             Services.AddSingleton<IWeatherServices, WeatherServices>();
+            Services.AddSingleton<ILocationServices, LocationServices>();
         }
 
         public void Dispose()

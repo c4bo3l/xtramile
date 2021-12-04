@@ -30,6 +30,7 @@ namespace xtramile
             services.AddSingleton<IUtilsServices, UtilsServices>();
             services.AddSingleton<IHttpClientServices, HttpClientServices>();
             services.AddTransient<IWeatherServices, WeatherServices>();
+            services.AddTransient<ILocationServices, LocationServices>();
 
             services.AddControllers();
             services.AddSwaggerGen();

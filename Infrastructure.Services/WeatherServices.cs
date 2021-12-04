@@ -27,39 +27,6 @@ namespace Infrastructure.Services
             WeatherConfig = weatherConfig?.Value ?? throw new ArgumentNullException(nameof(httpClientServices));
         }
 
-        public async Task<ICollection<string>> GetCities(string countryName)
-        {
-            if (string.IsNullOrEmpty(countryName?.Trim()))
-            {
-                throw new ArgumentNullException(nameof(countryName));
-            }
-
-            using (HttpClient client = HttpClientServices.GetPostmanAPIClient())
-            {
-                StringContent body = new StringContent(
-                    System.Text.Json.JsonSerializer.Serialize(new
-                    {
-                        country = countryName
-                    }),
-                    Encoding.UTF8,
-                    Application.Json
-                );
-                HttpResponseMessage responseMessage = await client.PostAsync("countries/cities", body);
-                CityResponse cityResponse = await ResponseHandler<CityResponse>(responseMessage);
-                return cityResponse.data.OrderBy(cityName => cityName.ToLower()).ToArray();
-            }
-        }
-
-        public async Task<ICollection<Country>> GetCountries()
-        {
-            using (HttpClient client = HttpClientServices.GetPostmanAPIClient())
-            {
-                HttpResponseMessage responseMessage = await client.GetAsync("countries/info?returns=name");
-                CountryResponse countryResponse = await ResponseHandler<CountryResponse>(responseMessage);
-                return countryResponse.data.OrderBy(country => country.name).ToArray();
-            }
-        }
-
         public async Task<WeatherInfo> GetWeatherInfo(string cityName)
         {
             if (string.IsNullOrEmpty(cityName?.Trim()))
@@ -83,22 +50,12 @@ namespace Infrastructure.Services
                 
                 responseMessage = await client.GetAsync($"onecall?lat={jsonData.coord.lat}&lon={jsonData.coord.lon}&exclude=hourly,daily,minutely&appid={WeatherConfig.Key}&units=imperial");
 
-                WeatherInfo info = await ResponseHandler<WeatherInfo>(responseMessage);
+                WeatherInfo info = await UtilsServices.ResponseHandler<WeatherInfo>(responseMessage);
                 
                 info.current.temp_celcius = UtilsServices.FahrenheitToCelcius(info.current.temp);
                 
                 return info;
             }
-        }
-
-        private async Task<T> ResponseHandler<T>(HttpResponseMessage responseMessage)
-        {
-            responseMessage.EnsureSuccessStatusCode();
-
-            string jsonData = await responseMessage.Content.ReadAsStringAsync();
-
-            T obj = JsonConvert.DeserializeObject<T>(jsonData);
-            return obj;
         }
     }
 }

@@ -6,8 +6,6 @@ namespace Infrastructure.Services
 {
     public interface IWeatherServices
     {
-        Task<ICollection<Country>> GetCountries();
-        Task<ICollection<string>> GetCities(string countryName);
         Task<WeatherInfo> GetWeatherInfo(string cityName);
     }
 }

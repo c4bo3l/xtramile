@@ -14,11 +14,11 @@ namespace xtramile.Controllers
     public class LocationController : ControllerBase
     {
         private readonly ILogger<LocationController> Logger;
-        private readonly IWeatherServices WeatherServices;
+        private readonly ILocationServices LocationServices;
 
-        public LocationController(IWeatherServices weatherServices, ILogger<LocationController> logger)
+        public LocationController(ILocationServices locationServices, ILogger<LocationController> logger)
         {
-            WeatherServices = weatherServices ?? throw new ArgumentNullException(nameof(weatherServices));
+            LocationServices = locationServices ?? throw new ArgumentNullException(nameof(locationServices));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -27,7 +27,7 @@ namespace xtramile.Controllers
         {
             try
             {
-                ICollection<Country> countries = await WeatherServices.GetCountries();
+                ICollection<Country> countries = await LocationServices.GetCountries();
                 return Ok(countries);
             }
             catch(Exception ex)
@@ -46,7 +46,7 @@ namespace xtramile.Controllers
                     throw new ArgumentNullException(nameof(countryName));
                 }
 
-                ICollection<string> cities = await WeatherServices.GetCities(countryName);
+                ICollection<string> cities = await LocationServices.GetCities(countryName);
                 return Ok(cities);
             }
             catch(Exception ex)

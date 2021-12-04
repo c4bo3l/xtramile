@@ -154,7 +154,7 @@ export const CitySelector = (props: CitySelectorProps) => {
       isOptionEqualToValue={(option, value) => option === value}
       getOptionLabel={(option) => option}
       loading={isLoading}
-      value={city || ''}
+      value={city || null}
       onChange={onChange}
       renderInput={(params) => (
         <TextField
