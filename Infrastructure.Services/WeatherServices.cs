@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Infrastructure.Model;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Services
 {

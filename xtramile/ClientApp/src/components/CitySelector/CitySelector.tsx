@@ -1,6 +1,6 @@
 import { Autocomplete, TextField, CircularProgress, AutocompleteChangeDetails, AutocompleteChangeReason, Typography, useTheme, useMediaQuery } from "@mui/material";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { locationAPIUrl } from "../../shared/links";
 import { ListChildComponentProps, VariableSizeList } from 'react-window';
 
@@ -173,7 +173,7 @@ export const CitySelector = (props: CitySelectorProps) => {
           }}
         />
       )}
-      renderOption={(props, option) => [props, option]}
+      renderOption={(props, option) => [props, option] as ReactNode}
       disabled={isLoading || !props.countryName}
       fullWidth
     />
