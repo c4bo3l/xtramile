@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Infrastructure.Model;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Services.Tests
